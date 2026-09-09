@@ -1,0 +1,118 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-panel: var(--panel);
+  --color-elevated: var(--elevated);
+  --color-gold: var(--gold);
+  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: "Noto Naskh Arabic", "Amiri", serif;
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.9rem;
+  --background: oklch(0.16 0.008 280);
+  --foreground: oklch(0.97 0.004 280);
+  --panel: oklch(0.2 0.009 280);
+  --elevated: oklch(0.245 0.011 280);
+  --card: oklch(0.205 0.009 280);
+  --card-foreground: oklch(0.97 0.004 280);
+  --popover: oklch(0.215 0.01 280);
+  --popover-foreground: oklch(0.97 0.004 280);
+  --primary: oklch(0.83 0.13 88);
+  --primary-foreground: oklch(0.19 0.02 80);
+  --gold: oklch(0.83 0.13 88);
+  --secondary: oklch(0.27 0.012 280);
+  --secondary-foreground: oklch(0.95 0.004 280);
+  --muted: oklch(0.26 0.011 280);
+  --muted-foreground: oklch(0.7 0.014 280);
+  --accent: oklch(0.3 0.02 280);
+  --accent-foreground: oklch(0.97 0.004 280);
+  --destructive: oklch(0.62 0.21 22);
+  --destructive-foreground: oklch(0.98 0.004 280);
+  --border: oklch(0.31 0.012 280);
+  --input: oklch(0.29 0.012 280);
+  --ring: oklch(0.83 0.13 88);
+  --sidebar: oklch(0.185 0.009 280);
+  --sidebar-foreground: oklch(0.95 0.004 280);
+  --sidebar-primary: oklch(0.83 0.13 88);
+  --sidebar-primary-foreground: oklch(0.19 0.02 80);
+  --sidebar-accent: oklch(0.26 0.011 280);
+  --sidebar-accent-foreground: oklch(0.97 0.004 280);
+  --sidebar-border: oklch(0.3 0.012 280);
+  --sidebar-ring: oklch(0.83 0.13 88);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    color-scheme: dark;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 999px;
+  }
+}
+
+@utility glass {
+  background: color-mix(in oklab, var(--panel) 75%, transparent);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--border);
+}
+
+@utility gold-text {
+  background: linear-gradient(100deg, oklch(0.9 0.11 92), oklch(0.75 0.14 78));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
