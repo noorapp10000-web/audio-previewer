@@ -1,0 +1,140 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: audioscape-export
+    description: AudioScape MP4 export jobs
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /audioscape-export/jobs:
+    post:
+      operationId: createAudioscapeExportJob
+      tags: [audioscape-export]
+      summary: Start an AudioScape MP4 export
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AudioscapeExportRequest"
+      responses:
+        "202":
+          description: Export job queued
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AudioscapeExportJobCreated"
+        "400":
+          description: Invalid export request
+  /audioscape-export/jobs/{jobId}:
+    get:
+      operationId: getAudioscapeExportJob
+      tags: [audioscape-export]
+      summary: Read AudioScape export progress
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: Export progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AudioscapeExportJobStatus"
+        "404":
+          description: Job not found
+  /audioscape-export/jobs/{jobId}/download:
+    get:
+      operationId: downloadAudioscapeExport
+      tags: [audioscape-export]
+      summary: Download the completed AudioScape MP4
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: MP4 video
+          content:
+            video/mp4:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Job not found
+        "409":
+          description: Export is not complete
+components:
+  parameters:
+    JobId:
+      name: jobId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    AudioscapeExportRequest:
+      type: object
+      properties:
+        project:
+          type: object
+          description: Serialized AudioScape project, including embedded data URLs.
+          additionalProperties: true
+      required:
+        - project
+    AudioscapeExportJobCreated:
+      type: object
+      properties:
+        jobId:
+          type: string
+          format: uuid
+      required:
+        - jobId
+    AudioscapeExportJobStatus:
+      type: object
+      properties:
+        jobId:
+          type: string
+          format: uuid
+        state:
+          type: string
+          enum: [queued, loading-renderer, rendering, finalizing, completed, failed]
+        progress:
+          type: number
+          minimum: 0
+          maximum: 1
+        stage:
+          type: string
+        error:
+          type: string
+      required:
+        - jobId
+        - state
+        - progress
+        - stage
+
