@@ -343,7 +343,7 @@ function EditorPage() {
               </Button>
               <Button variant="hero" size="sm" onClick={doExport} disabled={exporting}>
                 {exporting ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
-                <span className="hidden xs:inline">تصدير</span>
+                <span>تصدير</span>
               </Button>
             </div>
           </div>

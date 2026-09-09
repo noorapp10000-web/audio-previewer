@@ -66,11 +66,11 @@ function Dashboard() {
           }
         />
 
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
           {stats.map((s) => (
-            <div key={s.label} className="glass rounded-2xl p-4">
+            <div key={s.label} className="glass rounded-2xl p-3 shadow-soft sm:p-4">
               <s.icon className="size-5 text-primary" />
-              <p className="mt-3 text-2xl font-semibold">{s.value}</p>
+              <p className="mt-2 text-xl font-semibold sm:mt-3 sm:text-2xl">{s.value}</p>
               <p className="text-xs text-muted-foreground">{s.label}</p>
             </div>
           ))}
