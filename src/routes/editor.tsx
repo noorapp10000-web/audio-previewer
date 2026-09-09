@@ -391,7 +391,7 @@ function EditorPage() {
           </div>
         )}
 
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_400px]">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_400px]">
           {/* preview */}
           <div className="space-y-3">
             <div className="flex items-center justify-center rounded-3xl border border-border bg-panel/60 p-3">
@@ -467,7 +467,7 @@ function EditorPage() {
           </div>
 
           {/* panels */}
-          <div className="lg:max-h-[calc(100vh-160px)] lg:overflow-y-auto lg:pr-1">
+          <div className="min-w-0 lg:max-h-[calc(100vh-160px)] lg:overflow-y-auto lg:pr-1">
             <Tabs defaultValue="audio">
               <TabsList className="scroll-x sticky top-14 z-20 -mx-4 mb-3 flex h-auto w-[calc(100%+2rem)] justify-start gap-1.5 rounded-none border-b border-border bg-background/90 px-4 py-2 backdrop-blur lg:static lg:mx-0 lg:w-full lg:flex-wrap lg:rounded-2xl lg:border-0 lg:bg-transparent lg:px-0 lg:backdrop-blur-none">
                 {TABS.map((t) => (
