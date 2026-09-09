@@ -469,9 +469,13 @@ function EditorPage() {
           {/* panels */}
           <div className="lg:max-h-[calc(100vh-160px)] lg:overflow-y-auto lg:pr-1">
             <Tabs defaultValue="audio">
-              <TabsList className="mb-3 flex h-auto w-full flex-wrap justify-start gap-1 bg-transparent p-0">
+              <TabsList className="scroll-x sticky top-14 z-20 -mx-4 mb-3 flex h-auto w-[calc(100%+2rem)] justify-start gap-1.5 rounded-none border-b border-border bg-background/90 px-4 py-2 backdrop-blur lg:static lg:mx-0 lg:w-full lg:flex-wrap lg:rounded-2xl lg:border-0 lg:bg-transparent lg:px-0 lg:backdrop-blur-none">
                 {TABS.map((t) => (
-                  <TabsTrigger key={t.value} value={t.value} className="rounded-lg border border-border bg-panel px-3 py-1.5 text-xs">
+                  <TabsTrigger
+                    key={t.value}
+                    value={t.value}
+                    className="tap-safe shrink-0 rounded-xl border border-border bg-panel px-3.5 py-2 text-xs data-[state=active]:border-primary/60 data-[state=active]:bg-primary/15 data-[state=active]:text-primary"
+                  >
                     {t.label}
                   </TabsTrigger>
                 ))}
