@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
-import { Slider } from "@/components/ui/slider";
+import { useEffect, useRef, type ReactNode } from "react";
+import { Minus, Plus, RotateCcw } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,13 +8,64 @@ import { cn } from "@/lib/utils";
 
 export function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="space-y-3 rounded-2xl border border-border bg-panel p-4">
+    <div className="space-y-3 rounded-2xl border border-border bg-panel p-4 shadow-soft">
       <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{title}</h3>
       <div className="space-y-3">{children}</div>
     </div>
   );
 }
 
+/** Press-and-hold repeater for the +/- buttons. */
+function useHold(action: () => void) {
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const interval = useRef<ReturnType<typeof setInterval> | null>(null);
+  const fn = useRef(action);
+  fn.current = action;
+
+  const stop = () => {
+    if (timer.current) clearTimeout(timer.current);
+    if (interval.current) clearInterval(interval.current);
+    timer.current = null;
+    interval.current = null;
+  };
+  useEffect(() => stop, []);
+
+  const start = () => {
+    fn.current();
+    timer.current = setTimeout(() => {
+      interval.current = setInterval(() => fn.current(), 70);
+    }, 420);
+  };
+
+  return {
+    onPointerDown: (e: React.PointerEvent) => {
+      e.preventDefault();
+      start();
+    },
+    onPointerUp: stop,
+    onPointerLeave: stop,
+    onPointerCancel: stop,
+  };
+}
+
+function StepBtn({ children, disabled, onStep, label }: { children: ReactNode; disabled?: boolean; onStep: () => void; label: string }) {
+  const hold = useHold(onStep);
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      disabled={disabled}
+      {...hold}
+      className="grid size-9 shrink-0 place-items-center rounded-xl border border-border bg-elevated text-foreground transition-colors hover:border-primary/60 hover:bg-accent active:scale-95 disabled:pointer-events-none disabled:opacity-35"
+    >
+      {children}
+    </button>
+  );
+}
+
+/**
+ * Numeric control: minus / value / plus (no drag bars).
+ */
 export function Num({
   label,
   value,
@@ -23,6 +74,7 @@ export function Num({
   step = 1,
   onChange,
   suffix,
+  defaultValue,
 }: {
   label: string;
   value: number;
@@ -31,17 +83,43 @@ export function Num({
   step?: number;
   onChange: (v: number) => void;
   suffix?: string;
+  defaultValue?: number;
 }) {
+  const decimals = step < 1 ? String(step).split(".")[1]?.length ?? 2 : 0;
+  const clamp = (v: number) => Math.min(max, Math.max(min, Number(v.toFixed(decimals + 2))));
+  const shown = value.toFixed(decimals);
+  const pct = max > min ? ((value - min) / (max - min)) * 100 : 0;
+
   return (
     <div className="space-y-1.5">
-      <div className="flex items-center justify-between text-[13px]">
-        <span className="text-muted-foreground">{label}</span>
-        <span className="tabular-nums text-foreground/90">
-          {Math.round(value * 100) / 100}
-          {suffix}
-        </span>
+      <div className="flex items-center justify-between gap-2 text-[13px]">
+        <span className="min-w-0 truncate text-muted-foreground">{label}</span>
+        {defaultValue !== undefined && value !== defaultValue && (
+          <button
+            type="button"
+            onClick={() => onChange(defaultValue)}
+            className="shrink-0 text-muted-foreground transition-colors hover:text-primary"
+            aria-label={`إعادة ${label} للوضع الأصلي`}
+          >
+            <RotateCcw className="size-3.5" />
+          </button>
+        )}
       </div>
-      <Slider min={min} max={max} step={step} value={[value]} onValueChange={([v]) => onChange(v ?? value)} />
+      <div className="flex items-center gap-2">
+        <StepBtn label={`إنقاص ${label}`} disabled={value <= min} onStep={() => onChange(clamp(value - step))}>
+          <Minus className="size-4" />
+        </StepBtn>
+        <div className="relative min-w-0 flex-1 overflow-hidden rounded-xl border border-border bg-background/70">
+          <div className="absolute inset-y-0 start-0 bg-primary/15" style={{ width: `${pct}%` }} aria-hidden />
+          <div className="relative flex h-9 items-center justify-center gap-1 text-sm font-medium tabular-nums">
+            {shown}
+            {suffix && <span className="text-[11px] text-muted-foreground">{suffix}</span>}
+          </div>
+        </div>
+        <StepBtn label={`زيادة ${label}`} disabled={value >= max} onStep={() => onChange(clamp(value + step))}>
+          <Plus className="size-4" />
+        </StepBtn>
+      </div>
     </div>
   );
 }

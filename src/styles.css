@@ -34,6 +34,7 @@
   --color-panel: var(--panel);
   --color-elevated: var(--elevated);
   --color-gold: var(--gold);
+  --breakpoint-xs: 26rem;
   --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-arabic: "Noto Naskh Arabic", "Amiri", serif;
@@ -115,4 +116,37 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+@utility shadow-soft {
+  box-shadow: 0 1px 0 0 color-mix(in oklab, white 6%, transparent) inset,
+    0 12px 30px -18px oklch(0 0 0 / 0.8);
+}
+
+@utility shadow-glow {
+  box-shadow: 0 10px 34px -14px color-mix(in oklab, var(--primary) 65%, transparent);
+}
+
+@utility surface {
+  background: linear-gradient(160deg, color-mix(in oklab, var(--panel) 96%, white 4%), var(--panel));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+}
+
+@utility gold-ring {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--primary) 45%, transparent);
+}
+
+@utility scroll-x {
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility tap-safe {
+  min-height: 40px;
+  touch-action: manipulation;
 }
