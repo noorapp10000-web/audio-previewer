@@ -327,29 +327,43 @@ function EditorPage() {
     <Shell>
       {project.audio && <audio ref={audioRef} src={project.audio.url} preload="auto" className="hidden" />}
       <div className="px-4 py-5 lg:px-8">
-        <div className="mb-4 flex flex-wrap items-center gap-2">
-          <Input
-            value={project.name}
-            onChange={(e) => set((p) => ({ ...p, name: e.target.value }))}
-            className="h-9 w-44 sm:w-64"
-          />
-          <Badge variant="secondary" className="h-8 rounded-lg px-2 font-normal">
-            {getTemplate(project.templateId).name}
-          </Badge>
-          <div className="ms-auto flex items-center gap-1.5">
-            <Button variant="ghost" size="icon" onClick={undo} disabled={!canUndo} aria-label="رجوع">
-              <Undo2 className="size-4" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={redo} disabled={!canRedo} aria-label="تقدّم">
-              <Redo2 className="size-4" />
-            </Button>
-            <Button variant={autoLayout ? "secondary" : "outline"} size="sm" onClick={() => setAutoLayout((v) => !v)}>
+        <div className="mb-4 space-y-2">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+            <Input
+              value={project.name}
+              onChange={(e) => set((p) => ({ ...p, name: e.target.value }))}
+              className="h-10 min-w-0 sm:w-64 sm:flex-none"
+            />
+            <div className="flex shrink-0 items-center gap-1.5">
+              <Button variant="ghost" size="icon-sm" onClick={undo} disabled={!canUndo} aria-label="رجوع">
+                <Undo2 className="size-4" />
+              </Button>
+              <Button variant="ghost" size="icon-sm" onClick={redo} disabled={!canRedo} aria-label="تقدّم">
+                <Redo2 className="size-4" />
+              </Button>
+              <Button variant="hero" size="sm" onClick={doExport} disabled={exporting}>
+                {exporting ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
+                <span className="hidden xs:inline">تصدير</span>
+              </Button>
+            </div>
+          </div>
+          <div className="scroll-x -mx-1 flex items-center gap-1.5 px-1 pb-1">
+            <Badge variant="secondary" className="h-9 shrink-0 rounded-lg px-2.5 font-normal">
+              {getTemplate(project.templateId).name}
+            </Badge>
+            <Button
+              className="shrink-0"
+              variant={autoLayout ? "soft" : "outline"}
+              size="sm"
+              onClick={() => setAutoLayout((v) => !v)}
+            >
               ضبط تلقائي {autoLayout ? "مفعّل" : "موقوف"}
             </Button>
-            <Button variant="outline" size="sm" onClick={fitNow}>
+            <Button className="shrink-0" variant="outline" size="sm" onClick={fitNow}>
               <Wand2 className="size-4" /> رتّب الأبعاد
             </Button>
             <Button
+              className="shrink-0"
               variant="outline"
               size="sm"
               onClick={() => {
@@ -358,9 +372,6 @@ function EditorPage() {
               }}
             >
               <Save className="size-4" /> حفظ
-            </Button>
-            <Button size="sm" onClick={doExport} disabled={exporting}>
-              {exporting ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />} تصدير
             </Button>
           </div>
         </div>
