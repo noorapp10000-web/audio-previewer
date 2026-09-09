@@ -413,32 +413,51 @@ function EditorPage() {
                 snap={snap}
               />
             </div>
-            <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-border bg-panel p-3">
-              <Button size="icon" onClick={togglePlay} aria-label="تشغيل أو إيقاف">
-                {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
-              </Button>
-              <span className="tabular-nums text-sm text-muted-foreground">
-                {fmtTime(time)} / {project.config.timeline.remaining ? fmtTime(duration - time, true) : fmtTime(duration)}
-              </span>
-              <input
-                type="range"
-                min={0}
-                max={duration}
-                step={0.01}
-                value={time}
-                onChange={(e) => seek(Number(e.target.value))}
-                className="h-1.5 min-w-32 flex-1 cursor-pointer accent-primary"
-                aria-label="تحديد الوقت"
-              />
-              <Button variant={editMode ? "default" : "outline"} size="sm" onClick={() => setEditMode((v) => !v)}>
-                <Move className="size-4" /> {editMode ? "جاري التحرير" : "تحريك العناصر"}
-              </Button>
-              <Button variant={snap ? "secondary" : "outline"} size="icon" onClick={() => setSnap((v) => !v)} aria-label="محاذاة للشبكة">
-                <Grid3x3 className="size-4" />
-              </Button>
-              <Button variant={safeArea ? "secondary" : "outline"} size="sm" onClick={() => setSafeArea((v) => !v)}>
-                المنطقة الآمنة
-              </Button>
+            <div className="space-y-2.5 rounded-2xl border border-border bg-panel p-3 shadow-soft">
+              <div className="flex items-center gap-2.5">
+                <Button size="icon" onClick={togglePlay} aria-label="تشغيل أو إيقاف">
+                  {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
+                </Button>
+                <input
+                  type="range"
+                  min={0}
+                  max={duration}
+                  step={0.01}
+                  value={time}
+                  onChange={(e) => seek(Number(e.target.value))}
+                  className="h-1.5 min-w-0 flex-1 cursor-pointer accent-primary"
+                  aria-label="تحديد الوقت"
+                />
+                <span className="shrink-0 tabular-nums text-xs text-muted-foreground">
+                  {fmtTime(time)} / {project.config.timeline.remaining ? fmtTime(duration - time, true) : fmtTime(duration)}
+                </span>
+              </div>
+              <div className="scroll-x -mx-1 flex items-center gap-2 px-1">
+                <Button
+                  className="shrink-0"
+                  variant={editMode ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setEditMode((v) => !v)}
+                >
+                  <Move className="size-4" /> {editMode ? "جاري التحرير" : "تحريك العناصر"}
+                </Button>
+                <Button
+                  className="shrink-0"
+                  variant={snap ? "soft" : "outline"}
+                  size="sm"
+                  onClick={() => setSnap((v) => !v)}
+                >
+                  <Grid3x3 className="size-4" /> شبكة
+                </Button>
+                <Button
+                  className="shrink-0"
+                  variant={safeArea ? "soft" : "outline"}
+                  size="sm"
+                  onClick={() => setSafeArea((v) => !v)}
+                >
+                  المنطقة الآمنة
+                </Button>
+              </div>
             </div>
             {editMode && (
               <p className="text-xs text-muted-foreground">
