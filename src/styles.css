@@ -34,6 +34,7 @@
   --color-panel: var(--panel);
   --color-elevated: var(--elevated);
   --color-gold: var(--gold);
+  --breakpoint-xs: 26rem;
   --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-arabic: "Noto Naskh Arabic", "Amiri", serif;
