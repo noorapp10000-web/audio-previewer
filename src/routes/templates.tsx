@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Heart } from "lucide-react";
+import { Heart, Search, Star } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PageHeader, Shell } from "@/components/Shell";
 import { TemplateThumb } from "@/components/TemplateThumb";
@@ -29,6 +30,8 @@ function TemplatesPage() {
   const [cat, setCat] = useState<string>("الكل");
   const [asp, setAsp] = useState<string>("الكل");
   const [favs, setFavs] = useState<string[]>([]);
+  const [q, setQ] = useState("");
+  const [onlyFavs, setOnlyFavs] = useState(false);
 
   useEffect(() => {
     store.favTemplates().then(setFavs);
@@ -40,20 +43,45 @@ function TemplatesPage() {
     await store.saveFavTemplates(next);
   };
 
-  const list = TEMPLATES.filter((t) => (cat === "الكل" || t.category === cat) && (asp === "الكل" || t.config.aspect === asp));
+  const list = TEMPLATES.filter(
+    (t) =>
+      (cat === "الكل" || t.category === cat) &&
+      (asp === "الكل" || t.config.aspect === asp) &&
+      (!onlyFavs || favs.includes(t.id)) &&
+      (q.trim() === "" || `${t.name} ${t.category}`.includes(q.trim())),
+  );
 
   return (
     <Shell>
       <div className="px-4 py-6 sm:px-6 lg:px-8">
         <PageHeader title="القوالب" subtitle={`${TEMPLATES.length} تصميم مشغل جاهز — اختر واحد وابدأ.`} />
 
-        <div className="mb-5 flex flex-wrap gap-2">
+        <div className="mb-4 grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+          <div className="relative min-w-0">
+            <Search className="pointer-events-none absolute inset-y-0 start-3 my-auto size-4 text-muted-foreground" />
+            <Input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="ابحث عن قالب…"
+              className="h-10 ps-9"
+            />
+          </div>
+          <Button
+            variant={onlyFavs ? "soft" : "outline"}
+            onClick={() => setOnlyFavs((v) => !v)}
+            className="justify-center"
+          >
+            <Star className={cn("size-4", onlyFavs && "fill-primary")} /> المفضلة ({favs.length})
+          </Button>
+        </div>
+
+        <div className="scroll-x -mx-4 mb-2.5 flex gap-2 px-4 sm:mx-0 sm:flex-wrap sm:px-0">
           {["الكل", ...TEMPLATE_CATEGORIES].map((c) => (
             <button
               key={c}
               onClick={() => setCat(c)}
               className={cn(
-                "rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition hover:text-foreground",
+                "tap-safe shrink-0 rounded-full border border-border px-3.5 text-xs text-muted-foreground transition hover:text-foreground",
                 cat === c && "border-primary/60 bg-primary/15 text-foreground",
               )}
             >
@@ -62,13 +90,13 @@ function TemplatesPage() {
           ))}
         </div>
 
-        <div className="mb-5 flex flex-wrap gap-2">
+        <div className="scroll-x -mx-4 mb-5 flex gap-2 px-4 sm:mx-0 sm:flex-wrap sm:px-0">
           {["الكل", "9:16", "16:9", "1:1", "4:5"].map((a) => (
             <button
               key={a}
               onClick={() => setAsp(a)}
               className={cn(
-                "rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition hover:text-foreground",
+                "tap-safe shrink-0 rounded-full border border-border px-3.5 text-xs text-muted-foreground transition hover:text-foreground",
                 asp === a && "border-primary/60 bg-primary/15 text-foreground",
               )}
             >
@@ -77,10 +105,19 @@ function TemplatesPage() {
           ))}
         </div>
 
+        {list.length === 0 && (
+          <p className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
+            لا توجد قوالب مطابقة لبحثك.
+          </p>
+        )}
+
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {list.map((t) => (
-            <div key={t.id} className="glass overflow-hidden rounded-2xl p-2">
-              <div className="overflow-hidden rounded-xl bg-black/40">
+            <div
+              key={t.id}
+              className="glass group overflow-hidden rounded-2xl p-2 transition hover:-translate-y-0.5 hover:gold-ring"
+            >
+              <div className="grid h-40 place-items-center overflow-hidden rounded-xl bg-black/40 sm:h-48">
                 <TemplateThumb config={t.config} />
               </div>
               <div className="flex items-center gap-1 px-1 pt-2">
@@ -100,7 +137,7 @@ function TemplatesPage() {
                   />
                 </button>
               </div>
-              <Button asChild size="sm" className="mt-2 mb-1 w-full">
+              <Button asChild variant="hero" size="sm" className="mt-2 mb-1 w-full">
                 <Link to="/editor" search={{ template: t.id, project: undefined }}>
                   استخدم القالب
                 </Link>
