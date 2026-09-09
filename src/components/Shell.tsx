@@ -18,7 +18,7 @@ export function Shell({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-background">
       <aside className="fixed inset-y-0 start-0 z-30 hidden w-60 flex-col border-e border-border bg-sidebar px-3 py-5 lg:flex">
         <Link to="/" className="mb-7 flex items-center gap-2 px-2">
-          <span className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground">
+          <span className="grid size-9 place-items-center rounded-xl bg-gradient-to-b from-primary to-gold text-primary-foreground shadow-glow">
             <Sparkles className="size-5" />
           </span>
           <span className="text-[15px] font-semibold leading-tight">
@@ -46,10 +46,19 @@ export function Shell({ children }: { children: ReactNode }) {
       </aside>
 
       <header className="sticky top-0 z-30 flex items-center gap-2 border-b border-border bg-background/85 px-4 py-3 backdrop-blur lg:hidden">
-        <span className="grid size-8 place-items-center rounded-lg bg-primary text-primary-foreground">
-          <Sparkles className="size-4" />
-        </span>
-        <span className="text-sm font-semibold">استوديو مشغل القرآن</span>
+        <Link to="/" className="flex min-w-0 items-center gap-2">
+          <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-gradient-to-b from-primary to-gold text-primary-foreground">
+            <Sparkles className="size-4" />
+          </span>
+          <span className="truncate text-sm font-semibold">استوديو مشغل القرآن</span>
+        </Link>
+        <Link
+          to="/editor"
+          search={{ project: undefined, template: undefined }}
+          className="ms-auto shrink-0 rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary"
+        >
+          فيديو جديد
+        </Link>
       </header>
 
       <main className="pb-24 lg:pb-10 lg:ps-60">{children}</main>
@@ -75,8 +84,8 @@ export function Shell({ children }: { children: ReactNode }) {
 
 export function PageHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: ReactNode }) {
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-      <div>
+    <div className="mb-6 grid gap-3 sm:flex sm:flex-wrap sm:items-end sm:justify-between">
+      <div className="min-w-0">
         <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h1>
         {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
       </div>

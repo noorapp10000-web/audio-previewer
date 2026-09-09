@@ -31,7 +31,7 @@ export function TemplateThumb({ config, scale = 0.22 }: { config: PlayerConfig; 
       ref={ref}
       width={W}
       height={H}
-      className="h-full w-full object-contain"
+      className="max-h-full max-w-full object-contain"
       style={{ aspectRatio: `${base.w} / ${base.h}` }}
     />
   );
